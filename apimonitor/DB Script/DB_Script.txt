@@ -1,0 +1,30 @@
+/*
+In Neon, databases are stored on branches. By default, a project has one branch and one database.
+You can select the branch and database to use from the drop-down menus above.
+
+Try generating sample data and querying it by running the example statements below, or click
+New Query to clear the editor.
+*/
+CREATE TABLE api_failure_logs
+(
+    id SERIAL PRIMARY KEY,
+    service VARCHAR(100),
+    endpoint VARCHAR(200),
+    method VARCHAR(20),
+    status INTEGER,
+    exception VARCHAR(100),
+    message TEXT,
+    stacktrace TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE api_failure_analysis
+(
+    id SERIAL PRIMARY KEY,
+    failure_id INTEGER,
+    severity VARCHAR(200),
+    root_cause TEXT,
+    solution TEXT,
+    java_code TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
