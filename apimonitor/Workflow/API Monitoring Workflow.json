@@ -1,0 +1,429 @@
+{
+  "name": "API Monitoring Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Senior Java Architect.\n\nAnalyze this API failure.\n\nService:\n{{ $json.Service }}\n\nEndpoint:\n{{ $json.Endpoint }}\n\nStatus:\n{{ $json.Status }}\n\nException:\n{{ $json.Exception }}\n\nMessage:\n{{ $json.Message }}\n\nStackTrace:\n{{ $json.StackTrace }}\n\nReturn JSON only.\n\n{\n \"severity\":\"\",\n \"rootCause\":\"\",\n \"solution\":\"\",\n \"javaCode\":\"\"\n}",
+        "options": {
+          "systemMessage": "You are a Senior Java Backend Engineer.\n\nYour job is to analyze API failures from Spring Boot microservices.\n\nBased on the exception, message, and stack trace:\n\n- Identify the root cause.\n- Explain why the error occurred.\n- Suggest the most likely Java/Spring Boot fix.\n- Recommend best practices to avoid the issue.\n\nRespond only with valid JSON.\nDo not include markdown or additional explanations."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -608,
+        -48
+      ],
+      "id": "066f84ca-37cb-491f-82a8-660e37833eb3",
+      "name": "AI Agent",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -672,
+        160
+      ],
+      "id": "0a42faf8-1938-4a87-841f-998dba092d1f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "=api-failure",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1024,
+        -48
+      ],
+      "id": "3903ae89-e238-43e3-8d45-5bc49019df76",
+      "name": "Java Application Webhook",
+      "webhookId": "2ff3e43c-4a9e-470d-b726-a4a57784f7be"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "api_failure_logs",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "service": "={{$json.body.service}}",
+            "endpoint": "={{$json.body.endpoint}}",
+            "status": "={{$json.body.status}}",
+            "exception": "={{$json.body.exception}}",
+            "message": "={{$json.body.message}}",
+            "stacktrace": "={{$json.body.stackTrace}}",
+            "created_at": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "endpoint",
+              "displayName": "endpoint",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "method",
+              "displayName": "method",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "exception",
+              "displayName": "exception",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "stacktrace",
+              "displayName": "stacktrace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        -816,
+        -48
+      ],
+      "id": "8b0d270a-8668-41a2-9051-cf3efd7cef18",
+      "name": "api_failure_logs",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "LT39AKILlYeFBZBn",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const aiResponse = $json.output;\n\nconst parsed = JSON.parse(aiResponse);\n\nreturn {\n  json: parsed\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        -48
+      ],
+      "id": "cc9e050a-807e-475e-9298-0cdb28be318b",
+      "name": "Parse the AI response"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "api_failure_analysis",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "failure_id": 0,
+            "severity": "={{$json.severity}}",
+            "root_cause": "={{$json.rootCause}}",
+            "solution": "={{$json.solution}}",
+            "java_code": "={{$json.javaCode}}",
+            "created_at": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "failure_id",
+              "displayName": "failure_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "severity",
+              "displayName": "severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "root_cause",
+              "displayName": "root_cause",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "solution",
+              "displayName": "solution",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "java_code",
+              "displayName": "java_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        -96,
+        -48
+      ],
+      "id": "05788c8d-47f8-4d8e-aa53-596a18b3cb9e",
+      "name": "api_failure_analysis",
+      "credentials": {
+        "postgres": {
+          "id": "LT39AKILlYeFBZBn",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\":\"Success\",\n  \"message\":\"Exception processed\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        112,
+        -48
+      ],
+      "id": "b184cae2-cb80-4ee4-bcd8-0dec944f6db6",
+      "name": "Exception processed"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse the AI response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Java Application Webhook": {
+      "main": [
+        [
+          {
+            "node": "api_failure_logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "api_failure_logs": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse the AI response": {
+      "main": [
+        [
+          {
+            "node": "api_failure_analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "api_failure_analysis": {
+      "main": [
+        [
+          {
+            "node": "Exception processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0b290db7-d889-4cd1-a4f7-99d2beb7f861",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "516a575cfd0040d8bc3db6eed1c25d85d07dd925de523c50a835ffd0e502dbec"
+  },
+  "nodeGroups": [],
+  "id": "2PAZEBd14K29nAoZ",
+  "tags": []
+}
