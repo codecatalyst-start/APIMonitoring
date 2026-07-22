@@ -1,0 +1,102 @@
+{
+  "name": "Triage Agent (Sub-Workflow)",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "8960ecfa-2989-4bf3-b234-b1891ecd7783",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "notes": "Called by the parent Orchestrator Agent as a tool. Input fields: serviceId, serviceName, endpoint, httpMethod, statusCode, responseTimeMs, reportedSeverity, reportedCategory, errorMessage, createdAt."
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this API failure and triage it.\n\nService ID: {{$json.serviceId}}\nService Name: {{$json.serviceName}}\nEndpoint: {{$json.httpMethod}} {{$json.endpoint}}\nStatus Code: {{$json.statusCode}}\nResponse Time (ms): {{$json.responseTimeMs}}\nReported Severity: {{$json.reportedSeverity}}\nReported Category: {{$json.reportedCategory}}\nError: {{$json.errorMessage}}\nOccurred At: {{$json.createdAt}}\n\nReturn ONLY JSON:\n{\n  \"severity\": \"LOW|MEDIUM|HIGH|CRITICAL\",\n  \"category\": \"\",\n  \"priority\": \"P1|P2|P3|P4\",\n  \"impactSummary\": \"\"\n}",
+        "options": {
+          "systemMessage": "You are a triage specialist for backend API incidents. You quickly and accurately classify severity, category, and business priority based on the signals given. Always respond in strict JSON only, no markdown fences, no commentary."
+        }
+      },
+      "id": "38baa802-7363-4610-9f09-7c1351733029",
+      "name": "Triage Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        224
+      ],
+      "id": "a8b02893-ac4d-4da0-ac24-25662f904b64",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Triage Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Triage Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "be2448f7-5a70-4a19-9f18-ab885dd21dd8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4fa35574b1eff1cba6356fc6b9f923585ac51c24a33646b8924919e27d375cbf"
+  },
+  "nodeGroups": [],
+  "id": "QVLX8d231gcfWNUA",
+  "tags": []
+}
