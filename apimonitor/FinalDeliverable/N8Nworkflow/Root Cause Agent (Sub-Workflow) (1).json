@@ -1,0 +1,101 @@
+{
+  "name": "Root Cause Agent (Sub-Workflow)",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "f4535514-3ea7-4fa8-ab4d-432d7b800806",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "notes": "Called by the parent Orchestrator Agent as a tool. Input fields: errorMessage, stackTrace, requestPayload, responsePayload, endpoint, httpMethod, statusCode, triageAssessment (JSON string from the Triage Agent tool)."
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are analyzing an API failure after triage classification.\n\nTriage Assessment:\n{{$json.triageAssessment}}\n\nOriginal Failure Details:\nEndpoint: {{$json.httpMethod}} {{$json.endpoint}}\nStatus Code: {{$json.statusCode}}\nError Message: {{$json.errorMessage}}\nStack Trace: {{$json.stackTrace}}\nRequest Payload: {{$json.requestPayload}}\nResponse Payload: {{$json.responsePayload}}\n\nReturn ONLY JSON:\n{\n  \"rootCause\": \"\",\n  \"affectedComponent\": \"\",\n  \"confidence\": 0\n}",
+        "options": {
+          "systemMessage": "You are a senior Java microservice debugging expert. Focus exclusively on identifying the true root cause from the evidence given, not symptoms. Always respond in strict JSON only, no markdown fences, no commentary."
+        }
+      },
+      "id": "5084b510-7a64-4d43-be85-9233e2ce16e2",
+      "name": "Root Cause Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        160
+      ],
+      "id": "817a82c7-20f6-473b-a835-00edaaa78f5a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Root Cause Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Root Cause Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9bee5edb-d666-48fd-a22d-99677b04e1e1",
+  "meta": {
+    "instanceId": "4fa35574b1eff1cba6356fc6b9f923585ac51c24a33646b8924919e27d375cbf"
+  },
+  "nodeGroups": [],
+  "id": "XYWJ9sLDr5xJxPJm",
+  "tags": []
+}

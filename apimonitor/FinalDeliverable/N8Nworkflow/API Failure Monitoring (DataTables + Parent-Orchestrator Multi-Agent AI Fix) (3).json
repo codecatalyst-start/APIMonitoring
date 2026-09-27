@@ -1,0 +1,1031 @@
+{
+  "name": "API Failure Monitoring (DataTables + Parent-Orchestrator Multi-Agent AI Fix)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api-failure",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "7c758754-b06e-43fb-bb63-7aaf762f50ee",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "b8ae99e3-2293-492b-8971-c8af811041c9"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9af6f2cf-065a-43f1-95c1-b9924a440772",
+      "name": "Normalize Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "value": "api_failure_logs",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "service_id": "={{$json.body.serviceId}}",
+            "endpoint": "={{ $json.body.endpoint }}",
+            "http_method": "={{$json.body.method}}",
+            "status_code": "={{ $json.body.statusCode }}",
+            "response_time_ms": "={{$json.response_time_ms}}",
+            "severity": "={{$json.body.severity}}",
+            "category": "={{ $json.body.category }}",
+            "error_message": "={{ $json.body.message }}",
+            "stack_trace": "={{ $json.body.stacktrace }}",
+            "request_payload": "={{JSON.stringify($json.request_payload)}}",
+            "response_payload": "={{JSON.stringify($json.response_payload)}}",
+            "ai_status": "PENDING",
+            "ai_confidence": 0,
+            "service_name": "={{$json.service_name}}",
+            "created_at": "={{$json.created_at || $now.toISO()}}",
+            "ai_root_cause": "={{ $json.body.ai_root_cause }}",
+            "ai_fix_recommendation": "={{ $json.body.ai_fix_recommendation }}",
+            "ai_code_example": "="
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "service_id",
+              "displayName": "service_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "endpoint",
+              "displayName": "endpoint",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "http_method",
+              "displayName": "http_method",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status_code",
+              "displayName": "status_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "response_time_ms",
+              "displayName": "response_time_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "severity",
+              "displayName": "severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stack_trace",
+              "displayName": "stack_trace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "request_payload",
+              "displayName": "request_payload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "response_payload",
+              "displayName": "response_payload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_status",
+              "displayName": "ai_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_root_cause",
+              "displayName": "ai_root_cause",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_fix_recommendation",
+              "displayName": "ai_fix_recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_code_example",
+              "displayName": "ai_code_example",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_confidence",
+              "displayName": "ai_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "analyzed_at",
+              "displayName": "analyzed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "service_name",
+              "displayName": "service_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "64d2a6d8-8971-4154-a7c1-14183c96b2bf",
+      "name": "Insert Row (DataTable)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        464,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Raw Orchestrator Agent output (should be the QA Reviewer tool's final JSON, passed through verbatim)\nconst rawOutput = ($json.output || $json.text || $json.response || '').toString().trim();\nconst cleaned = rawOutput.replace(/^```json\\s*/i, '').replace(/^```\\s*/i, '').replace(/```\\s*$/,'').trim();\n\nlet parsed;\ntry {\n  parsed = JSON.parse(cleaned);\n} catch (e) {\n  throw new Error('Orchestrator Agent did not return valid JSON: ' + cleaned);\n}\n\n// 2. Exact input fields that were given to the \"Insert Row (DataTable)\" node\nconst insertInput = $('Normalize Data').first().json;\n\n// 3. The row actually written by \"Insert Row (DataTable)\" (carries the generated id)\nconst insertedRow = $('Insert Row (DataTable)').first().json;\n\n// 4. Merge: insert-row input fields + inserted row (for id/columns) + final orchestrated AI response\nconst merged = {\n  ...insertInput,\n  ...insertedRow,\n  ai_status: 'COMPLETED',\n  ai_root_cause: parsed.rootCause,\n  ai_fix_recommendation: parsed.fixRecommendation,\n  ai_code_example: parsed.codeExample,\n  ai_confidence: parsed.confidence,\n  severity: parsed.severity || insertInput.severity,\n  category: parsed.category || insertInput.category,\n  review_notes: parsed.reviewNotes || '',\n  analyzed_at: new Date().toISOString()\n};\n\nreturn [{ json: merged }];"
+      },
+      "id": "c7618638-81e0-446a-9e0c-7ba5276e9b32",
+      "name": "Parse AI JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "value": "api_failure_logs",
+          "mode": "name"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "service_id",
+              "keyValue": "={{ $json.body.serviceId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "service_name": "={{$json.service_name}}",
+            "endpoint": "={{ $json.body.endpoint }}",
+            "http_method": "={{ $json.body.method }}",
+            "status_code": "={{ $json.body.statusCode }}",
+            "response_time_ms": "={{$json.response_time_ms}}",
+            "error_message": "={{ $json.body.error_message }}",
+            "stack_trace": "={{ $json.body.stackTrace }}",
+            "request_payload": "={{$json.request_payload}}",
+            "response_payload": "={{$json.response_payload}}",
+            "created_at": "={{$json.created_at}}",
+            "ai_status": "={{$json.ai_status}}",
+            "ai_root_cause": "={{$json.ai_root_cause}}",
+            "ai_fix_recommendation": "={{$json.ai_fix_recommendation}}",
+            "ai_code_example": "={{$json.ai_code_example}}",
+            "ai_confidence": "={{$json.ai_confidence}}",
+            "severity": "={{ $json.body.severity }}",
+            "category": "={{$json.category}}",
+            "analyzed_at": "={{$json.analyzed_at}}",
+            "service_id": "={{ $json.body.serviceId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "service_id",
+              "displayName": "service_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "endpoint",
+              "displayName": "endpoint",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "http_method",
+              "displayName": "http_method",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status_code",
+              "displayName": "status_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "response_time_ms",
+              "displayName": "response_time_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "severity",
+              "displayName": "severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stack_trace",
+              "displayName": "stack_trace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "request_payload",
+              "displayName": "request_payload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "response_payload",
+              "displayName": "response_payload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_status",
+              "displayName": "ai_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_root_cause",
+              "displayName": "ai_root_cause",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_fix_recommendation",
+              "displayName": "ai_fix_recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_code_example",
+              "displayName": "ai_code_example",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_confidence",
+              "displayName": "ai_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "analyzed_at",
+              "displayName": "analyzed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "service_name",
+              "displayName": "service_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "dryRun": false
+        }
+      },
+      "id": "06372c45-cfd5-4ea7-bbd0-842226a09b6a",
+      "name": "Update Row (AI Result)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        0
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "dateamarja@gmail.com",
+        "subject": "=🚨API Failure {{$json.service_name}} | {{$json.status_code}} | {{$json.severity}}",
+        "message": "=API FAILURE ANALYSIS COMPLETE\n--------------------------------\n={{$json.email_html}}",
+        "options": {}
+      },
+      "id": "4ef0f507-c898-407d-874a-958971c01170",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        0
+      ],
+      "webhookId": "466dc836-7213-4621-91df-01162579b550",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LPWPzt8fpefx9sl7",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $json;\n\nconst badgeColor = {\n    LOW:\"#28a745\",\n    MEDIUM:\"#ff9800\",\n    HIGH:\"#f44336\",\n    CRITICAL:\"#8b0000\"\n}[d.severity] || \"#1976d2\";\n\nconst html = `\n<html>\n\n<body style=\"font-family:Arial;background:#f4f4f4;padding:20px;\">\n\n<div style=\"background:white;border-radius:10px;padding:20px;\">\n\n<h2 style=\"color:#d32f2f;\">\n🚨 API Failure Analysis\n</h2>\n\n<table style=\"border-collapse:collapse;width:100%;\">\n\n<tr>\n<td><b>Service</b></td>\n<td>${d.service_name}</td>\n</tr>\n\n<tr>\n<td><b>Endpoint</b></td>\n<td>${d.http_method} ${d.endpoint}</td>\n</tr>\n\n<tr>\n<td><b>Status</b></td>\n<td>${d.status_code}</td>\n</tr>\n\n<tr>\n<td><b>Severity</b></td>\n<td>\n<span style=\"\nbackground:${badgeColor};\ncolor:white;\npadding:5px 12px;\nborder-radius:8px;\">\n${d.severity}\n</span>\n</td>\n</tr>\n\n<tr>\n<td><b>Category</b></td>\n<td>${d.category}</td>\n</tr>\n\n<tr>\n<td><b>Occurred</b></td>\n<td>${d.created_at}</td>\n</tr>\n\n</table>\n\n<hr>\n\n<h3>Root Cause</h3>\n\n<p>${d.ai_root_cause}</p>\n\n<h3>Recommended Fix</h3>\n\n<p>${d.ai_fix_recommendation}</p>\n\n<h3>Sample Code</h3>\n\n<pre style=\"\nbackground:#272822;\ncolor:#f8f8f2;\npadding:15px;\noverflow:auto;\">\n${d.ai_code_example}\n</pre>\n\n<hr>\n\n<b>AI Confidence :</b> ${d.ai_confidence}%<br>\n\n<b>Analyzed At :</b> ${d.analyzed_at}\n\n</div>\n\n</body>\n</html>\n`;\n\nreturn [{\njson:{\n...d,\nemail_html:html\n}\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1536,
+        144
+      ],
+      "id": "0eccd882-c36c-4108-bed2-942c6a1ee3df",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        272
+      ],
+      "id": "061142aa-de34-48d4-97f0-e65b8035e807",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this API failure end-to-end using your available tools.\n\nService ID: {{$json.service_id}}\nService Name: {{$json.service_name}}\nEndpoint: {{$json.http_method}} {{$json.endpoint}}\nStatus Code: {{$json.status_code}}\nResponse Time (ms): {{$json.response_time_ms}}\nReported Severity: {{$json.severity}}\nReported Category: {{$json.category}}\nError: {{$json.error_message}}\nStack Trace: {{$json.stack_trace}}\nRequest Payload: {{$json.request_payload}}\nResponse Payload: {{$json.response_payload}}\nOccurred At: {{$json.created_at}}\n\nReturn ONLY the final JSON produced by the QA Reviewer Agent tool, unmodified.",
+        "options": {
+          "systemMessage": "You are the orchestrator for an API failure analysis pipeline. You do not analyze failures yourself — you delegate to specialist sub-agent tools and assemble their results. For every failure you MUST, in this exact order:\n1. Call the 'Triage Agent' tool with the raw failure fields (serviceId, serviceName, endpoint, httpMethod, statusCode, responseTimeMs, reportedSeverity, reportedCategory, errorMessage, createdAt).\n2. Call the 'Root Cause Agent' tool, passing errorMessage, stackTrace, requestPayload, responsePayload, endpoint, httpMethod, statusCode, and the full JSON string result from step 1 as triageAssessment.\n3. Call the 'Fix Engineer Agent' tool, passing the full JSON string result from step 2 as rootCauseAnalysis, plus endpoint and httpMethod.\n4. Call the 'QA Reviewer Agent' tool, passing the JSON string results from steps 1, 2 and 3 as triageAssessment, rootCauseAnalysis and proposedFix.\nIf any tool returns invalid JSON or an error, retry that tool once with clarified input before proceeding. Never skip a step and never call a later tool before its dependency has succeeded. Your final answer must be exactly the JSON object returned by the QA Reviewer Agent tool — no extra text, no markdown fences, no commentary."
+        }
+      },
+      "id": "95dc7c1f-ca9f-469c-90d9-23a31b6150b7",
+      "name": "Orchestrator Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        624,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "name": "Root_Cause_Agent",
+        "description": "Determines the true root cause of an API failure from the raw error details. Call this AFTER the Triage Agent tool, passing its JSON result as triageAssessment.",
+        "workflowId": {
+          "__rl": true,
+          "value": "XYWJ9sLDr5xJxPJm",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/XYWJ9sLDr5xJxPJm",
+          "cachedResultName": "Root Cause Agent (Sub-Workflow)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "errorMessage": "={{ $fromAI('errorMessage', 'value for errorMessage', 'string') }}",
+            "stackTrace": "={{ $fromAI('stackTrace', 'value for stackTrace', 'string') }}",
+            "requestPayload": "={{ $fromAI('requestPayload', 'value for requestPayload', 'string') }}",
+            "responsePayload": "={{ $fromAI('responsePayload', 'value for responsePayload', 'string') }}",
+            "endpoint": "={{ $fromAI('endpoint', 'value for endpoint', 'string') }}",
+            "httpMethod": "={{ $fromAI('httpMethod', 'value for httpMethod', 'string') }}",
+            "statusCode": "={{ $fromAI('statusCode', 'value for statusCode', 'string') }}",
+            "triageAssessment": "={{ $fromAI('triageAssessment', 'value for triageAssessment', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "errorMessage",
+              "displayName": "errorMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stackTrace",
+              "displayName": "stackTrace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "requestPayload",
+              "displayName": "requestPayload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "responsePayload",
+              "displayName": "responsePayload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "endpoint",
+              "displayName": "endpoint",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "httpMethod",
+              "displayName": "httpMethod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "statusCode",
+              "displayName": "statusCode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "triageAssessment",
+              "displayName": "triageAssessment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        }
+      },
+      "id": "ab790600-d5ef-4751-8cbe-4bcdf94e13b5",
+      "name": "Root Cause Agent Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "name": "Fix_Engineer_Agent",
+        "description": "Proposes a concrete fix and working code example given a root cause analysis. Call this AFTER the Root Cause Agent tool, passing its JSON result as rootCauseAnalysis.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ziklm8J1GkOu0fGV",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ziklm8J1GkOu0fGV",
+          "cachedResultName": "Fix Engineer Agent (Sub-Workflow)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rootCauseAnalysis": "={{ $fromAI('rootCauseAnalysis', 'value for rootCauseAnalysis', 'string') }}",
+            "endpoint": "={{ $fromAI('endpoint', 'value for endpoint', 'string') }}",
+            "httpMethod": "={{ $fromAI('httpMethod', 'value for httpMethod', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "rootCauseAnalysis",
+              "displayName": "rootCauseAnalysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "endpoint",
+              "displayName": "endpoint",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "httpMethod",
+              "displayName": "httpMethod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        }
+      },
+      "id": "a95da4b9-821c-4478-bb40-3ee0bfa1e2c7",
+      "name": "Fix Engineer Agent Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "name": "QA_Reviewer_Agent",
+        "description": "Reviews the triage, root cause and fix for consistency, recalibrates severity/confidence if needed, and produces the FINAL combined JSON. Call this LAST, after all other tools, and return its output as your final answer unmodified.",
+        "workflowId": {
+          "__rl": true,
+          "value": "bSYs3tHNKxHKy7or",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/bSYs3tHNKxHKy7or",
+          "cachedResultName": "QA Reviewer Agent (Sub-Workflow)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "triageAssessment": "={{ $fromAI('triageAssessment', 'value for triageAssessment', 'string') }}",
+            "rootCauseAnalysis": "={{ $fromAI('rootCauseAnalysis', 'value for rootCauseAnalysis', 'string') }}",
+            "proposedFix": "={{ $fromAI('proposedFix', 'value for proposedFix', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "triageAssessment",
+              "displayName": "triageAssessment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "rootCauseAnalysis",
+              "displayName": "rootCauseAnalysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "proposedFix",
+              "displayName": "proposedFix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        }
+      },
+      "id": "401172d1-e594-494f-b233-c2e0ced5ac18",
+      "name": "QA Reviewer Agent Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        1024,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "name": "Triage_Agent",
+        "description": "Classifies the severity, category and business priority of an API failure. ALWAYS call this first, before any other tool, for every incoming failure.",
+        "workflowId": {
+          "__rl": true,
+          "value": "QVLX8d231gcfWNUA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/QVLX8d231gcfWNUA",
+          "cachedResultName": "Triage Agent (Sub-Workflow)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "b9a40cbd-460b-40b5-8919-6350509f2863",
+      "name": "Triage Agent Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        208
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Data": {
+      "main": [
+        [
+          {
+            "node": "Insert Row (DataTable)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Row (DataTable)": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse AI JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI JSON": {
+      "main": [
+        [
+          {
+            "node": "Update Row (AI Result)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Row (AI Result)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Root Cause Agent Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Engineer Agent Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "QA Reviewer Agent Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Triage Agent Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9d2fa3e2-ee69-4137-a4c5-fccbbbe0e823",
+  "meta": {
+    "instanceId": "4fa35574b1eff1cba6356fc6b9f923585ac51c24a33646b8924919e27d375cbf"
+  },
+  "nodeGroups": [],
+  "id": "fWWdGsSckILIzMFX",
+  "tags": []
+}
